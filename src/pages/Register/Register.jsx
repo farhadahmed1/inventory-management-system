@@ -1,14 +1,42 @@
 import { useForm } from "react-hook-form";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+  const axiosPublic = useAxiosPublic();
 
+  const navigate = useNavigate();
   const onSubmit = (data) => {
     console.log(data);
+
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      photoURL: data.photoURL,
+    };
+
+    axiosPublic.post("/user/signup", userInfo).then((res) => {
+      if (res.data.status === "success") {
+        console.log(res.data);
+        reset();
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${res.data.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/login");
+      }
+    });
   };
   return (
     <div>
@@ -61,9 +89,9 @@ const Register = () => {
                   type="password"
                   placeholder="password"
                   className="input input-bordered"
+                  autoComplete="current-password"
                   {...register("password", {
                     required: true,
-                    autoComplete: true,
                     minLength: 6,
                     maxLength: 20,
                     pattern:
@@ -86,6 +114,21 @@ const Register = () => {
                     Minimum Six characters, at least one letter, one number and
                     one special character:
                   </p>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">photo URL</span>
+                </label>
+                <input
+                  name="photoURL"
+                  type="photo"
+                  {...register("photoURL", { required: true })}
+                  placeholder=" Enter your photoURl"
+                  className="input input-bordered"
+                />
+                {errors.name && (
+                  <span className="text-red-600">This field is required</span>
                 )}
               </div>
               <div className="form-control mt-6">
