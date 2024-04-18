@@ -14,13 +14,12 @@ const Register = () => {
 
   const navigate = useNavigate();
   const onSubmit = (data) => {
-    console.log(data);
-
+    //console.log(data);
     const userInfo = {
       name: data.name,
       email: data.email,
       password: data.password,
-      photoURL: data.photoURL,
+      imageURL: data.imageURL,
     };
 
     axiosPublic.post("/user/signup", userInfo).then((res) => {
@@ -121,10 +120,10 @@ const Register = () => {
                   <span className="label-text">photo URL</span>
                 </label>
                 <input
-                  name="photoURL"
-                  type="photo"
-                  {...register("photoURL", { required: true })}
-                  placeholder=" Enter your photoURl"
+                  name="imageURL"
+                  type="imageURL"
+                  {...register("imageURL", { required: true })}
+                  placeholder=" Enter your imageURL"
                   className="input input-bordered"
                 />
                 {errors.name && (
